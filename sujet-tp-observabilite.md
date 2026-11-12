@@ -471,18 +471,48 @@ Vérifier le retour à l'état UP.
 
 ## 12. Questions de compréhension
 
-1. Quelle est la différence entre Prometheus et Grafana ?
-2. Quel est le rôle de Node Exporter ?
-3. Que signifie le terme scraping ?
-4. À quoi sert le fichier `prometheus.yml` ?
-5. Pourquoi Grafana utilise-t-il l'adresse `prometheus:9090` ?
-6. À quoi sert PromQL ?
-7. Pourquoi utilise-t-on des volumes Docker ?
-8. Que se passe-t-il lorsqu'une target passe à l'état DOWN ?
-9. Pourquoi est-il important de surveiller les ressources CPU, RAM et disque ?
-10. Expliquer la différence entre les états UP et DOWN.
-11. Pourquoi utilise-t-on la fonction `rate()` pour calculer l'utilisation CPU ?
-12. Pourquoi exclut-on généralement l'interface `lo` ?
+1. Quelle est la différence entre Prometheus et Grafana ?  
+Prometheus est un outil chargé de collecter et de stocker les métriques provenant des services supervisés.  
+Grafana est un outil de visualisation qui permet d'exploiter ces métriques sous forme de tableaux de bord, de graphiques et d'indicateurs.
+
+2. Quel est le rôle de Node Exporter ?  
+Node Exporter expose les métriques système d'une machine Linux, notamment celles concernant le processeur, la mémoire RAM, le disque et le réseau.  
+
+3. Que signifie le terme scraping ?  
+Le scraping désigne le mécanisme par lequel Prometheus interroge périodiquement une cible pour récupérer les métriques qu'elle expose.  
+
+4. À quoi sert le fichier `prometheus.yml` ?  
+Le fichier prometheus.yml contient la configuration de Prometheus.  
+
+5. Pourquoi Grafana utilise-t-il l'adresse `prometheus:9090` ?  
+Grafana et Prometheus communiquent à travers le réseau Docker monitoring. L'adresse prometheus correspond au nom du service Prometheus dans ce réseau, et le port 9090 est celui sur lequel il écoute.  
+Il faut donc utiliser prometheus:9090 plutôt que localhost:9090, car localhost désignerait le conteneur Grafana lui-même, et non le conteneur Prometheus.  
+
+6. À quoi sert PromQL ?  
+PromQL est le langage de requête de Prometheus. Il permet d'interroger, de filtrer et de manipuler les métriques collectées afin d'obtenir des informations exploitables.  
+
+7. Pourquoi utilise-t-on des volumes Docker ?  
+Les volumes Docker permettent de conserver les données même lorsque les conteneurs sont arrêtés, supprimés ou recréés.  
+
+8. Que se passe-t-il lorsqu'une target passe à l'état DOWN ?  
+Lorsqu'une target passe à l'état DOWN, cela signifie que Prometheus ne parvient plus à récupérer ses métriques. Ça peut être dû à un problème de communication, à un service arrêté ou à une mauvaise configuration.  
+
+9. Pourquoi est-il important de surveiller les ressources CPU, RAM et disque ?  
+La surveillance de ces ressources permet de détecter les problèmes de performances et d'éviter les saturations :  
+- CPU : une utilisation trop importante peut entraîner des ralentissements et une diminution des performances.  
+- RAM : une mémoire presque saturée peut provoquer des ralentissements, voire l'arrêt de certains processus.  
+- Disque : un espace disque saturé peut empêcher l'écriture de fichiers, de logs ou de données, et perturber le fonctionnement des services.  
+
+10. Expliquer la différence entre les états UP et DOWN.  
+- UP : Prometheus parvient à contacter la target et à récupérer ses métriques. La métrique up vaut 1.  
+- DOWN : Prometheus ne parvient pas à récupérer les métriques de la target. La métrique up vaut 0.  
+
+11. Pourquoi utilise-t-on la fonction `rate()` pour calculer l'utilisation CPU ?  
+La fonction rate() permet de calculer la vitesse moyenne d'évolution du compteur 'node_cpu_seconds_total' sur une période donnée. Elle permet donc d'obtenir une proportion de temps passé dans l'état inactif.  
+
+12. Pourquoi exclut-on généralement l'interface `lo` ?  
+L'interface lo correspond à l'interface réseau loopback, utilisée par une machine pour communiquer avec elle-même.  
+Son trafic ne représente pas les échanges avec le réseau extérieur. On l'exclut donc généralement des graphiques de trafic réseau afin de se concentrer sur les communications réellement effectuées avec les autres machines.  
 
 ## 13. Commandes utiles
 
